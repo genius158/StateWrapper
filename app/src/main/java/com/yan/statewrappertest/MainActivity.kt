@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.item_data_main.view.*
 class MainActivity : AppCompatActivity() {
     private lateinit var dataList: ArrayList<String>
     private lateinit var stateWrapper: GStateWrapper
+    private lateinit var adapter: RecyclerView.Adapter<*>
 
     private var stateIndex: Int = 0
     private var onRefreshListener: SwipeRefreshLayout.OnRefreshListener = SwipeRefreshLayout.OnRefreshListener {
@@ -28,7 +29,6 @@ class MainActivity : AppCompatActivity() {
             2 -> {
                 srlRefresh.isRefreshing = false
                 stateWrapper.setShowStateView(false)
-                stateWrapper.notifyDataSetChanged()
             }
         }
     }
@@ -51,15 +51,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun dataInit() {
-        dataList.clear()
-        for ((index, _) in (0 until 8).withIndex()) {
-            dataList.add(index.toString())
-        }
+        rvData.postDelayed({
+            dataList.clear()
+            for ((index, _) in (0 until 8).withIndex()) {
+                dataList.add(index.toString())
+            }
+            adapter.notifyDataSetChanged()
+        }, 200)
     }
 
     private fun initLMR() {
         rvData.layoutManager = LinearLayoutManager(baseContext)
-        stateWrapper = GStateWrapper(baseContext, getAdapter())
+        adapter = getAdapter()
+        stateWrapper = GStateWrapper(baseContext, adapter)
         stateWrapper.setOnBtnClickListener(View.OnClickListener {
             srlRefresh.isRefreshing = true
             onRefreshListener.onRefresh()
