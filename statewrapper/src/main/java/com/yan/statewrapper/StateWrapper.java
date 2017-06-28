@@ -15,7 +15,7 @@ import android.view.ViewGroup;
  */
 
 public abstract class StateWrapper<T extends View> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int ITEM_TYPE_STATE = 0x147;
+    private static final String TAG = "StateWrapper";
 
     private RecyclerView.Adapter innerAdapter;
     private Context context;
@@ -25,24 +25,40 @@ public abstract class StateWrapper<T extends View> extends RecyclerView.Adapter<
     public StateWrapper(Context context, RecyclerView.Adapter adapter) {
         this.context = context;
         innerAdapter = adapter;
+
+        /**
+         * try twice to register adapter
+         */
+        if (!registerAdapter()) {
+            registerAdapter();
+        }
+    }
+
+    /**
+     * register adapter
+     * @return
+     */
+    private boolean registerAdapter() {
         try {
             innerAdapter.registerAdapterDataObserver(adapterDataObserver);
+            return true;
         } catch (Exception e) {
-            Log.e(e.getClass().getName(), e.getMessage());
+            Log.e(TAG, e.getMessage());
+            return false;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (isShowStateView) {
-            return ITEM_TYPE_STATE;
+        if (!isShowStateView) {
+            return innerAdapter.getItemViewType(position);
         }
-        return innerAdapter.getItemViewType(position);
+        return -1;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == ITEM_TYPE_STATE) {
+        if (isShowStateView) {
             View view;
             if (stateView(parent.getLayoutParams()) != null) {
                 onStateInit((T) (view = stateView(parent.getLayoutParams())));
@@ -64,6 +80,10 @@ public abstract class StateWrapper<T extends View> extends RecyclerView.Adapter<
         }
     }
 
+    /**
+     *
+     * @param showStateView is state view show
+     */
     public void setShowStateView(boolean showStateView) {
         if (showStateView == this.isShowStateView) {
             return;
@@ -149,6 +169,9 @@ public abstract class StateWrapper<T extends View> extends RecyclerView.Adapter<
         }
     }
 
+    /**
+     * date change observer
+     */
     private RecyclerView.AdapterDataObserver adapterDataObserver = new RecyclerView.AdapterDataObserver() {
         @Override
         public void onChanged() {
