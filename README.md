@@ -7,8 +7,8 @@ StateWrapper is used to set the state like no data , no net and so on ,
  do the same thing like StateWrapper , but to do that I have to do some operations useless
  and the extending is not good
 <br/>
-StateWrapper , when you call the method setShowStateView(true) , the state view that you 
-set will come out , do not to modify the data source 
+StateWrapper , when you call the method setShowStateView(true) , the state view that you
+ have set will come out , do not to modify the data source 
 <br/>
  
 
