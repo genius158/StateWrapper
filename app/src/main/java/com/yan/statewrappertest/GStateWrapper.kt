@@ -12,7 +12,7 @@ import com.yan.statewrapper.StateWrapper
  * Created by yan on 2017/6/23.
  */
 
-class GStateWrapper(private val context: Context, adapter: RecyclerView.Adapter<*>) : StateWrapper<StateView>(context, adapter) {
+class GStateWrapper(context: Context, adapter: RecyclerView.Adapter<*>) : StateWrapper<StateView>(context, adapter) {
 
     private var gStateView: StateView? = null
     private var onBtnClickListener: View.OnClickListener? = null
