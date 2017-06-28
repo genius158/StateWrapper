@@ -12,7 +12,7 @@ StateWrapper, when you call the method setShowStateView(true), the state view th
 <br/>
  
 
-## 2.use  
+## 2.how to use  
 ```
     // control the state view show or not
    stateWrapper.setShowStateView(isShow)
